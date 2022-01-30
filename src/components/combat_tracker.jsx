@@ -25,6 +25,7 @@ export default class CombatTracker extends React.Component {
       this.onChangeValue = this.onChangeValue.bind(this);
       this.multiselectRef = React.createRef();
       this.DeletePreset =this.DeletePreset.bind(this)
+      this.addAPI=this.addAPI.bind(this)
     }
 
     componentDidMount(){
@@ -111,9 +112,31 @@ export default class CombatTracker extends React.Component {
       this.setState({EnemyList: array});
       this.multiselectRef.current.resetSelectedValues();
     }
+    addAPI(MonsterName){
+      //Adds new item to a list from Api
+     if (!MonsterName) return
 
+      let target=this.state.MonserList.find(({ name }) => name === MonsterName );
+      if(!target) return
+
+      fetch("https://www.dnd5eapi.co"+target.url)
+      .then(res => res.json())
+      .then((result) => {
+
+      var newelement={id:Date.now(),
+        "name":MonsterName,
+        "hp":result.hit_points,
+        "ac":result.armor_class,
+        rolledVal:null,
+        data:result}
+      this.setState({EnemyList: [...this.state.EnemyList, newelement]})
+      this.multiselectRef.current.resetSelectedValues()
+    
+    })
+    }
     add(name,hp,ac){
       //Adds new item to a list
+
       var newelement={id:Date.now(),"name":name,"hp":hp,"ac":ac,rolledVal:null};
       this.setState({EnemyList: [...this.state.EnemyList, newelement]})
       this.multiselectRef.current.resetSelectedValues();
@@ -156,8 +179,8 @@ export default class CombatTracker extends React.Component {
             
             <input type="text" placeholder="AC" name="ac"onChange={this.handleChange} className="input-group-text input-z-index d-inline col-1"/>
             <input type="text" placeholder="HP" name="hp" onChange={this.handleChange} className="input-group-text input-z-index d-inline col-1"/>
-            <button type="button" onClick={()=>this.add(this.state.name,this.state.hp,this.state.ac)} className="btn btn-success align-baseline col-1 bi bi-plus" ></button>
-            
+            <button onClick={()=>this.add(this.state.name,this.state.hp,this.state.ac)} className="btn btn-success align-baseline col-1 bi bi-plus" ></button>
+            <button onClick={(e)=>this.addAPI(this.state.name)} className="btn btn-primary align-baseline">Add from Book</button>
             <div className="mt-2">
 
             {this.state.EnemyList.map((item,index)=>
@@ -186,7 +209,6 @@ export default class CombatTracker extends React.Component {
                           {item}
                    </button>
                 )}
-                
                 <Rolling_tray/>
         </div>
       );

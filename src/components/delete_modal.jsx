@@ -18,7 +18,7 @@ class delete_modal extends Component {
 
                 {this.props.PresetList.map((item,index)=><div key={index}>
                     {item}
-                    <button onClick={()=>this.props.DeletePreset(item)} className='ms-2 btn-danger'>-</button>
+                    <button onClick={()=>this.props.DeletePreset(item)} className='ms-2 bi bi-minus btn btn-danger'>-</button>
                 </div>)}
                 </div>
                 
