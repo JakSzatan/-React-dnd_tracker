@@ -13,3 +13,4 @@ This is a passion project made for D&D players and DM's to make combat easier an
   - [ ] Display monster stats:exclamation:
   - [ ] Make a Documentation
   - [ ] Make a list of task and plan further development 
+  - [ ] Connect to firebase
