@@ -3,6 +3,7 @@ import MonsterEntry from "./monster_entry";
 import SaveModal  from "./savemodal";
 import Rolling_tray from "./rolling_tray";
 import Multi_roll from "./multi_roll";
+import Delete_modal from"./delete_modal"
 export default class CombatTracker extends React.Component {
 
 
@@ -12,7 +13,7 @@ export default class CombatTracker extends React.Component {
         ac:'',hp:'',
         EnemyList:[],
         modifier:0,
-        presetList:[],
+        presetList:JSON.parse(localStorage.getItem('presetList'))||[],
         Advatage:false,
         Disadvantage:false,
         MonserList:[]
@@ -23,7 +24,7 @@ export default class CombatTracker extends React.Component {
       this.roll =this.roll.bind(this)
       this.onChangeValue = this.onChangeValue.bind(this);
       this.multiselectRef = React.createRef();
-      this.state.presetList=JSON.parse(localStorage.getItem('presetList'))||[];
+      this.DeletePreset =this.DeletePreset.bind(this)
     }
 
     componentDidMount(){
@@ -32,10 +33,16 @@ export default class CombatTracker extends React.Component {
           .then((result) => {
             this.setState({MonserList:result.results})
               })
-
     }
 
-
+    DeletePreset(name){
+      //delete item from preset list
+    let NewPresetList=JSON.parse(localStorage.getItem('presetList'))||[]
+    NewPresetList.splice(NewPresetList.indexOf(name),1)///pop
+    localStorage.setItem("presetList",JSON.stringify(NewPresetList))
+    localStorage.removeItem(name)
+    this.setState({presetList:NewPresetList})
+  }
     Save(name){
       ///Save to local sorage a state of encounter as a preset
       var presetlist=JSON.parse(localStorage.getItem('presetList'))||[];
@@ -173,11 +180,13 @@ export default class CombatTracker extends React.Component {
                  />
 
                   <SaveModal Save={this.Save}/>
+                  <Delete_modal PresetList={this.state.presetList} DeletePreset={this.DeletePreset}/>
         {this.state.presetList.map((item,index)=>
                   <button key={"a"+index} className="mt-5 btn btn-info text-center" onClick={()=>this.Load(item)}>
                           {item}
                    </button>
                 )}
+                
                 <Rolling_tray/>
         </div>
       );

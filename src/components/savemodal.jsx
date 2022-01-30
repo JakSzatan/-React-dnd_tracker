@@ -18,7 +18,7 @@ export default class SaveModal extends React.Component {
       return (
         <div>
             <button type="button" className=" btn btn-primary mt-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            Save
+            Save Preset
             </button>
 
             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
