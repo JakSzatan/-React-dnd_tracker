@@ -16,8 +16,10 @@ export default class CombatTracker extends React.Component {
         presetList:JSON.parse(localStorage.getItem('presetList'))||[],
         Advatage:false,
         Disadvantage:false,
-        MonserList:[]
+        MonserList:[],
+        HideMultiRoll:false
     };
+      this.hide=this.hide.bind(this)
       this.handler=this.handler.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.Save =this.Save.bind(this)
@@ -36,6 +38,9 @@ export default class CombatTracker extends React.Component {
               })
     }
 
+    hide(bool){
+      this.setState({HideMultiRoll:bool})
+    }
     DeletePreset(name){
       //delete item from preset list
     let NewPresetList=JSON.parse(localStorage.getItem('presetList'))||[]
@@ -86,9 +91,11 @@ export default class CombatTracker extends React.Component {
       }
       handler(array)
     }
+
     handler(array){
       this.setState({EnemyList:array})
     }
+
     roll(item,dice){
       let Result= Math.floor(Math.random() * (dice - 1 + 1)) + 1;
       let Result2= Math.floor(Math.random() * (dice - 1 + 1)) + 1;
@@ -122,13 +129,13 @@ export default class CombatTracker extends React.Component {
       fetch("https://www.dnd5eapi.co"+target.url)
       .then(res => res.json())
       .then((result) => {
-
+        console.log(result);
       var newelement={id:Date.now(),
         "name":MonsterName,
         "hp":result.hit_points,
         "ac":result.armor_class,
         rolledVal:null,
-        data:result}
+        Statdata:result}
       this.setState({EnemyList: [...this.state.EnemyList, newelement]})
       this.multiselectRef.current.resetSelectedValues()
     
@@ -170,7 +177,7 @@ export default class CombatTracker extends React.Component {
 
         <div className="flex-row d-flex flex-wrap">
 
-          <div className="flex-row col-6 ps-3 pe-3 mt-5">
+          <div className={(this.state.HideMultiRoll?"col-md-12":"col-md-6")+" col-sm-12 flex-row ps-3 pe-3 mt-5"}>
 
             <input type="text" list="monstername" placeholder="name" name="name" onChange={this.handleChange} className="input-group-text input-z-index d-inline col-4"/>
             <datalist id="monstername">
@@ -181,6 +188,7 @@ export default class CombatTracker extends React.Component {
             <input type="text" placeholder="HP" name="hp" onChange={this.handleChange} className="input-group-text input-z-index d-inline col-1"/>
             <button onClick={()=>this.add(this.state.name,this.state.hp,this.state.ac)} className="btn btn-success align-baseline col-1 bi bi-plus" ></button>
             <button onClick={(e)=>this.addAPI(this.state.name)} className="btn btn-primary align-baseline">Add from Book</button>
+
             <div className="mt-2">
 
             {this.state.EnemyList.map((item,index)=>
@@ -200,8 +208,8 @@ export default class CombatTracker extends React.Component {
               roll={this.roll}
               state={this.state}
               handler={this.handler}
+              hide={this.hide}
                  />
-
                   <SaveModal Save={this.Save}/>
                   <Delete_modal PresetList={this.state.presetList} DeletePreset={this.DeletePreset}/>
         {this.state.presetList.map((item,index)=>
@@ -210,6 +218,7 @@ export default class CombatTracker extends React.Component {
                    </button>
                 )}
                 <Rolling_tray/>
+                <button onClick={()=>this.hide(false)} className="btn btn-info fst-italic fs-6 position-fixed bottom-50 end-0" style={!this.state.HideMultiRoll?{display:"none"}:{}}>&lt;Show</button>
         </div>
       );
     }

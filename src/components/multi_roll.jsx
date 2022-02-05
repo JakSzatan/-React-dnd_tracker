@@ -3,10 +3,19 @@ import Multiselect from 'multiselect-react-dropdown';
 import RollEntry from './roll_entry'
 
 class multi_roll extends Component {
+  constructor(props) {
+    super(props);
+      this.state = { 
+      };
+    }
     render() {
         return (
-            <div className="col-6 border-start border-dark ps-3 pe-3">
-            <div className="col-12 fs-3">Multi Roll</div>
+            <div className=" border-start border-dark ps-3 pe-3 col-md-6 col-sm-12" style={this.props.state.HideMultiRoll?{display:"none"}:{}}>
+            
+            <div className="col-12 fs-3">Multi Roll
+             <button onClick={()=>this.props.hide(true)} className='ms-1 btn btn-outline-info fst-italic fs-6'>Hide&gt;</button>
+             </div>
+            
             <div className="col-12">
   
             <div onChange={this.props.onChangeValue}>

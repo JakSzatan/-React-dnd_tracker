@@ -1,4 +1,5 @@
 import React from "react";
+import Stat_block from "./stat_block";
 
 
 export default class Monster_Entry extends React.Component {
@@ -59,9 +60,15 @@ export default class Monster_Entry extends React.Component {
       return (
         <div className="d-flex flex-row" >
             <button type="submit" onClick={this.props.delete} className="col-1 btn btn-danger bi bi-x"></button>
+           
+            
            <div className="col-3 border border-end-0 text-center pt-1">
-           {this.props.data.name} 
+           {this.props.data.Statdata?
+           <a role="button" className="link-primary" data-bs-toggle="modal" data-bs-target={"#b"+this.props.data.id.toString()}>{this.props.data.name}</a>
+           :this.props.data.name}
+
            </div>
+
            <div className="col-1 border border-end-0 text-info">
            {this.props.data.ac}AC
           </div>
@@ -73,6 +80,21 @@ export default class Monster_Entry extends React.Component {
             <input type="text" onChange={this.handleChange} name="heal" placeholder="Heal" className="col-1"/>
             <button type="submit" className="btn btn-success col-1 bi bi-plus-lg" onClick={()=>{this.heal(this.state.heal)}} ></button>
             <div className="col-1 rounded" style={{backgroundColor: this.state.color}}></div>
+          
+          
+          
+          
+            <div className="modal fade" id={"b"+this.props.data.id.toString()}  tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div className="modal-dialog modal-lg">
+                <div className="modal-content">
+                <Stat_block statData={this.props.data.Statdata||null}/>
+                    <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+          
+          
+          
           </div>
       );
     }
